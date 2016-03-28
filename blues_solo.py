@@ -2,6 +2,7 @@
 
 from Nsound import *
 import numpy as np
+import random
 from random import choice
 
 def add_note(out, instr, key_num, duration, bpm, volume):
@@ -32,5 +33,20 @@ blues_scale = [25, 28, 30, 31, 32, 35, 37, 40, 42, 43, 44, 47, 49, 52, 54, 55, 5
 beats_per_minute = 45				# Let's make a slow blues solo
 
 add_note(solo, bass, blues_scale[0], 1.0, beats_per_minute, 1.0)
+
+
+#for the licks, more than one note
+
+curr_note = 0
+add_note(solo, bass, blues_scale[curr_note], 1.0, beats_per_minute, 1.0)
+
+#the blues lick:
+licks = [ [ [1, 0.5], [1, 0.5], [1, 0.5], [1, 0.5] ], [ [-1, 0.5], [-1, 0.5], [-1, 0.5], [-1, 0.5] ]]
+for i in range(4):
+    lick = licks[0]
+    for note in lick:
+        curr_note += note[0]
+        add_note(solo, bass, blues_scale[curr_note], note[1], beats_per_minute, 1.0)
+
 
 solo >> "blues_solo.wav"
