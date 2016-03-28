@@ -37,16 +37,31 @@ add_note(solo, bass, blues_scale[0], 1.0, beats_per_minute, 1.0)
 
 #for the licks, more than one note
 
-curr_note = 0
+curr_note = 10
 add_note(solo, bass, blues_scale[curr_note], 1.0, beats_per_minute, 1.0)
 
 #the blues lick:
-licks = [ [ [1, 0.5], [1, 0.5], [1, 0.5], [1, 0.5] ], [ [-1, 0.5], [-1, 0.5], [-1, 0.5], [-1, 0.5] ]]
+licks = [ [ [1, 0.5], [1, 0.5], [1, 0.5], [1, 0.5] ], [ [-1, 0.5], [-1, 0.5], [-1, 0.5], [-1, 0.5] ], [ [1, 0.25], [-1, 0.25], [-1, 0.75], [1, 0.75] ]]
 for i in range(4):
-    lick = licks[0]
+    lick = random.choice(licks)
     for note in lick:
         curr_note += note[0]
+        if curr_note < 0:
+            curr_note = 0
+        if curr_note > len(blues_scale) -1:
+            curr_note = len(blues_scale) - 1
         add_note(solo, bass, blues_scale[curr_note], note[1], beats_per_minute, 1.0)
 
+# solo >> "blues_solo.wav"
+backing_track = AudioStream(sampling_rate, 1)
+Wavefile.read('backing.wav', backing_track)
 
-solo >> "blues_solo.wav"
+m = Mixer()
+
+solo *= 0.4             # adjust relative volumes to taste
+backing_track *= 2.0
+
+m.add(2.25, 0, solo)    # delay the solo to match up with backing track   
+m.add(0, 0, backing_track)
+
+m.getStream(500.0) >> "slow_blues.wav"
